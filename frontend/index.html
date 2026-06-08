@@ -1,0 +1,52 @@
+
+<!doctype html>
+<html lang="en">
+<head>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width,initial-scale=1">
+	<title>Hideproject</title>
+	<style>
+		body { font-family: system-ui, -apple-system, 'Segoe UI', Roboto, 'Helvetica Neue', Arial; max-width:720px; margin:2rem auto; padding:0 1rem; }
+		button { padding:.5rem 1rem; margin-right:.5rem }
+		pre { background:#f6f8fa; padding:1rem; border-radius:6px; white-space:pre-wrap }
+	</style>
+</head>
+<body>
+	<h1>Hideproject</h1>
+	<p>Frontend served from <strong>frontend/</strong>. Use the buttons to call the backend.</p>
+
+	<div>
+		<button id="helloBtn">Call /api/hello</button>
+		<button id="healthBtn">Check /health</button>
+	</div>
+
+	<h2>Response</h2>
+	<pre id="out">—</pre>
+
+	<script>
+		const out = document.getElementById('out');
+		async function showJSON(resp){
+			try {
+				const json = await resp.json();
+				out.textContent = JSON.stringify(json, null, 2);
+			} catch(e){
+				out.textContent = await resp.text();
+			}
+		}
+
+		document.getElementById('helloBtn').addEventListener('click', async () => {
+			try {
+				const res = await fetch('/api/hello');
+				await showJSON(res);
+			} catch (e) { out.textContent = 'Error: ' + e.message }
+		});
+
+		document.getElementById('healthBtn').addEventListener('click', async () => {
+			try {
+				const res = await fetch('/health');
+				out.textContent = await res.text();
+			} catch (e) { out.textContent = 'Error: ' + e.message }
+		});
+	</script>
+</body>
+</html>
